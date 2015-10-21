@@ -12,28 +12,26 @@ import java.util.Map;
  */
 public class ArrayTricks {
 
-    /* test arrays */
-    int[] array = {2, -3, 5, 7, 1, 3, 4, 9, -6, 5, 8, 0, 6};
-    int[] array1 = {1, 3, 5, 7, 9, 11};
-    int[] array2 = {2, 4, 6, 8, 10, 12};
-
     /*
      * Counts sum of array
      */
-    public void sumOfElements() {
+    public int sumOfElements(int[] array) {
+
+        checkNotNull(array);
+
         int sum = 0;
 
         for (int i = 0; i < array.length; i++) {
             sum += array[i];
         }
 
-        System.out.println(sum);
+        return  sum;
     }
 
     /*
      * Finds max element in array
      */
-    public void maxElement() {
+    public void maxElement(int[] array) {
         int max = Integer.MIN_VALUE;
         int maxIndex = 0;
 
@@ -50,7 +48,7 @@ public class ArrayTricks {
     /*
      * Finds min element in array
      */
-    public void minElement() {
+    public void minElement(int[] array) {
         int min = Integer.MAX_VALUE;
         int minIndex = 0;
 
@@ -67,7 +65,7 @@ public class ArrayTricks {
     /*
      * Finds average value of all elements in array
      */
-    public void averageValue() {
+    public void averageValue(int[] array) {
         int sum = 0;
 
         for (int i = 0; i < array.length; i++) {
@@ -82,7 +80,7 @@ public class ArrayTricks {
     /*
      * Counts, how often picked element appears in array
      */
-    public void pickedElements() {
+    public void pickedElements(int[] array) {
         int pickedElement = 5;      //assume so
         int appearance = 0;
 
@@ -98,7 +96,7 @@ public class ArrayTricks {
     /*
      * Counts all zero elements in array;
      */
-    public void zeroElements() {
+    public void zeroElements(int[] array) {
         int appearance = 0;
 
         for (int i = 0; i < array.length; i++) {
@@ -113,7 +111,7 @@ public class ArrayTricks {
     /*
      * Counts all positive elements in array
      */
-    public void moreThanZero() {
+    public void moreThanZero(int[] array) {
         int count = 0;
 
         for (int i = 0; i < array.length; i++) {
@@ -128,7 +126,7 @@ public class ArrayTricks {
     /*
      * Multiplies all elements to specified value
      */
-    public void multiplyByNumber() {
+    public void multiplyByNumber(int[] array) {
         int number = 5;
         int[] outArray = new int[array.length];
 
@@ -142,7 +140,7 @@ public class ArrayTricks {
     /*
      * To each element in array adds its index
      */
-    public void addIndex() {
+    public void addIndex(int[] array) {
         int[] outArray = new int[array.length];
 
         for (int i = 0; i < array.length; i++) {
@@ -155,7 +153,7 @@ public class ArrayTricks {
     /*
      * Set to zero each even element
      */
-    public void zeroEvenElement() {
+    public void zeroEvenElement(int[] array) {
         int[] outArray = new int[array.length];
 
         for (int i = 0; i < array.length; i++) {
@@ -172,7 +170,7 @@ public class ArrayTricks {
     /*
      * Set to zero each element with odd index
      */
-    public void zeroElementOddIndex() {
+    public void zeroElementOddIndex(int[] array) {
         int[] outArray = new int[array.length];
 
         for (int i = 0; i < array.length; i++) {
@@ -189,7 +187,7 @@ public class ArrayTricks {
     /*
      * Finds first value in array
      */
-    public void firstPositive() {
+    public void firstPositive(int[] array) {
         for (int i = 0; i < array.length; i++) {
             if (array[i] > 0) {
                 System.out.println(array[i]);
@@ -203,7 +201,7 @@ public class ArrayTricks {
     /*
      * Finds last negative value in array
      */
-    public void lastNegative() {
+    public void lastNegative(int[] array) {
         int indexOfNegative = -1;
 
         for (int i = 0; i < array.length; i++) {
@@ -222,7 +220,7 @@ public class ArrayTricks {
     /*
      * Counts how often specified elements appears in array (outputs indexes)
      */
-    public void elementInArrayEntrance() {
+    public void elementInArrayEntrance(int[] array) {
 
         int element = 5;
         ArrayList<Integer> indexes = new ArrayList<Integer>();
@@ -239,7 +237,7 @@ public class ArrayTricks {
     /*
      * Checks, if array sorted in ascending order
      */
-    public void ascendingOrderCheck() {
+    public void ascendingOrderCheck(int[] array) {
         for(int i = 0; i < array.length - 1; i++) {
             if (array[i] > array[i + 1]) {
                 System.out.println("Elements aren't ordered by ascending");
@@ -253,7 +251,7 @@ public class ArrayTricks {
     /*
      * Checks, if array sorted in decay order
      */
-    public void decayOrderCheck() {
+    public void decayOrderCheck(int[] array) {
         for(int i = 0; i < array.length - 1; i++) {
             if (array[i] < array[i + 1]) {
                 System.out.println("Elements aren't ordered by decay");
@@ -267,11 +265,14 @@ public class ArrayTricks {
     /*
      * Shifts all elements to right for specified number of posissions
      */
-    public void rightShift() {
+    public void rightShift(int[] array) {
         int[] outArray = new int[array.length];
         int shift = 2;
 
         for (int i = 0; i < array.length; i++) {
+
+            //outArray[(i + k) % array.length] = array[i];
+
             if (i + shift >= array.length) {
                 outArray[i + shift - array.length] = array[i];
             } else {
@@ -280,12 +281,19 @@ public class ArrayTricks {
         }
 
         showArray(outArray);
+
+//        for (int i = array.length - 1; i > 0; i--) {
+//            array[i] = array[i - 1];
+//        }
+        // Consider
+//        System.arraycopy(array, 0, outArray, shift, array.length - shift);
+//        System.arraycopy(array, array.length - shift, outArray, 0, shift);
     }
 
     /*
      * Shows all repeated elements
      */
-    public void repeatedElements() {
+    public void repeatedElements(int[] array) {
         HashMap<Integer, Integer> statistic = new HashMap<Integer, Integer>();
 
         for (int i = 0; i < array.length; i++) {
@@ -308,7 +316,7 @@ public class ArrayTricks {
     /*
      * Shows all elements, that greater than average value
      */
-    public void moreThanAverage() {
+    public ArrayList moreThanAverage(int[] array) {
         int sum = 0;
         ArrayList<Integer> elements = new ArrayList<Integer>();
 
@@ -324,13 +332,14 @@ public class ArrayTricks {
             }
         }
 
-        System.out.println(elements);
+        return elements;
     }
 
     /*
      * Shows unique elements in array
      */
-    public void uniqueValues() {
+    //TODO figure out return format
+    public void uniqueValues(int[] array) {
         HashMap<Integer, Integer> statistic = new HashMap<Integer, Integer>();
 
         for (int i = 0; i < array.length; i++) {
@@ -351,9 +360,88 @@ public class ArrayTricks {
     }
 
     /*
+     * Unique elements another realisation
+     *
+     * Not tested
+     */
+    public void printUnique(int[] array) {
+        for (int i = 0; i < array.length; i++) {
+            boolean unique = true;
+            for (int j = 0; j < array.length; j++) {
+                if (i != j && array[i] == array[j]) {
+                    unique = false;
+                }
+            }
+
+            if (unique) {
+                System.out.println(array[i]);
+            }
+        }
+    }
+
+    /*
+     * Binary search
+     *
+     * Not tested
+     *
+     * Not finished
+     */
+    public static int binarySearch(int[] array, int value) {
+        int lower = 0;
+        int upper = array.length; // exclusive
+
+        while (lower < upper) {
+            int mid = lower + (upper - lower) / 2;
+
+            if(array[mid] == value) {
+                return mid;
+            } else if (array[mid] < value) {
+                lower = mid + 1;
+            } else {  //array[mid] > value
+                upper = mid;
+            }
+        }
+
+        return -1;  //
+    }
+
+    // Find
+    public int findFirstValue(int[] array, int value) {
+        for (int i = 0; i < array.length; i++) {
+            if (array[i] == value) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    /*
+     * Collection - free realisation, truly evil
+     */
+    public static void printRepeats( int array[]) {
+
+        boolean[] repeats = new boolean[array.length];
+
+        for (int i = 0; i < array.length; i++) {
+            for (int j = i + 1; j < array.length; j++) {
+                if (array[i] == array[j]) {
+
+                    if (!repeats[i]) {
+                        System.out.println(array[i]);
+                    }
+
+                    repeats[i] = true;
+                    repeats[j] = true;
+                }
+            }
+        }
+    }
+
+    /*
      * Counts how often first element appears in array
      */
-    public void asFirstElement() {
+    public int asFirstElement(int[] array) {
         int count = 0;
         int firstElement = array[0];
 
@@ -363,13 +451,13 @@ public class ArrayTricks {
             }
         }
 
-        System.out.println(count);
+        return count;
     }
 
     /*
      * Creates one big sorted array from to sorted smaller ones
      */
-    public void thirdSortedArray() {
+    public int[] thirdSortedArray(int[] array1, int[] array2) {
         int first = 0;
         int second = 0;
         int[] outArray = new int[array1.length + array2.length];
@@ -386,13 +474,13 @@ public class ArrayTricks {
             }
         }
 
-        showArray(outArray);
+        return outArray;
     }
 
     /*
      * Swaps positive elements heads to tails
      */
-    public void swapPositiveElements() {
+    public int[] swapPositiveElements(int[] array) {
         int head = 0;
         int tail = array.length - 1;
 
@@ -414,7 +502,7 @@ public class ArrayTricks {
             }
         }
 
-        showArray(array);
+        return array;
     }
 
     /*
@@ -423,51 +511,51 @@ public class ArrayTricks {
     public static void main(String[] args) {
         ArrayTricks instance = new ArrayTricks();
 
-        instance.sumOfElements();
-
-        instance.maxElement();
-
-        instance.minElement();
-
-        instance.averageValue();
-
-        instance.pickedElements();
-
-        instance.zeroElements();
-
-        instance.moreThanZero();
-
-        instance.multiplyByNumber();
-
-        instance.addIndex();
-
-        instance.zeroEvenElement();
-
-        instance.zeroElementOddIndex();
-
-        instance.firstPositive();
-
-        instance.lastNegative();
-
-        instance.elementInArrayEntrance();
-
-        instance.ascendingOrderCheck();
-
-        instance.decayOrderCheck();
-
-        instance.rightShift();
-
-        instance.repeatedElements();
-
-        instance.moreThanAverage();
-
-        instance.uniqueValues();
-
-        instance.asFirstElement();
-
-        instance.thirdSortedArray();
-
-        instance.swapPositiveElements();
+//        instance.sumOfElements();
+//
+//        instance.maxElement();
+//
+//        instance.minElement();
+//
+//        instance.averageValue();
+//
+//        instance.pickedElements();
+//
+//        instance.zeroElements();
+//
+//        instance.moreThanZero();
+//
+//        instance.multiplyByNumber();
+//
+//        instance.addIndex();
+//
+//        instance.zeroEvenElement();
+//
+//        instance.zeroElementOddIndex();
+//
+//        instance.firstPositive();
+//
+//        instance.lastNegative();
+//
+//        instance.elementInArrayEntrance();
+//
+//        instance.ascendingOrderCheck();
+//
+//        instance.decayOrderCheck();
+//
+//        instance.rightShift();
+//
+//        instance.repeatedElements();
+//
+//        instance.moreThanAverage();
+//
+//        instance.uniqueValues();
+//
+//        instance.asFirstElement();
+//
+//        instance.thirdSortedArray();
+//
+//        instance.swapPositiveElements();
     }
 
     /*
@@ -479,5 +567,11 @@ public class ArrayTricks {
         }
 
         System.out.println();
+    }
+
+    private void checkNotNull(int[] array) {
+        if (array == null) {
+            throw new IllegalArgumentException("array must be not null");
+        }
     }
 }
