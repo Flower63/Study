@@ -19,6 +19,8 @@ public class Main {
 
         testInsertionSort(testArray.clone());
 
+        testMergeSort(testArray.clone());
+
     }
 
     public static void testBubbleSort(int[] testArray) {
@@ -41,6 +43,13 @@ public class Main {
          * Insertion sort
          */
         performTest(testArray, new MyInsertionSort());
+    }
+
+    public static void testMergeSort(int[] testArray) {
+        /*
+         * Merge sort
+         */
+        performTest(testArray, new MyMergeSort());
     }
 
     private static void performTest(int[] testArray, Sorting instance) {
