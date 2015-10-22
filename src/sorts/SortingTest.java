@@ -5,7 +5,7 @@ import java.util.Arrays;
 /**
  * Created by Dennis on 10/20/2015.
  */
-public class Main {
+public class SortingTest {
 
     public static void main(String[] args) {
         /*
@@ -20,6 +20,8 @@ public class Main {
         testInsertionSort(testArray.clone());
 
         testMergeSort(testArray.clone());
+
+        testQuickSort(testArray.clone());
 
     }
 
@@ -50,6 +52,13 @@ public class Main {
          * Merge sort
          */
         performTest(testArray, new MyMergeSort());
+    }
+
+    public static void testQuickSort(int[] testArray) {
+        /*
+         * Quick sort
+         */
+        performTest(testArray, new MyQuickSort());
     }
 
     private static void performTest(int[] testArray, Sorting instance) {

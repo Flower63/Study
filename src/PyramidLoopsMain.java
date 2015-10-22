@@ -1,5 +1,5 @@
 /**
- * Main class for PyramidLoops
+ * SortingTest class for PyramidLoops
  * to run and perform some tests
  *
  * @author Dennis_Zvarich

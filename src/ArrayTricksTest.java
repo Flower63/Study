@@ -1,5 +1,6 @@
 import junit.framework.TestCase;
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by Flower on 10/21/2015.
@@ -147,7 +148,15 @@ public class ArrayTricksTest extends TestCase {
 
         assertNotNull(shiftedArray);
 
-        assertArrayEquals(new int[] {8, 9, 0, 1, 2, 3, 4, 5, 6, 7}, shiftedArray);
+        assertArrayEquals(new int[]{8, 9, 0, 1, 2, 3, 4, 5, 6, 7}, shiftedArray);
+    }
+
+    public void testInsert() throws Exception {
+        int[] test = instance.insert(array, 10, 5);
+
+        assertNotNull(test);
+
+        assertArrayEquals(new int[] {2, -3, 5, 7, 1, 10, 3, 4, 9, -6, 5, 8, 0, 6}, test);
     }
 
     public void testRepeatedElements() throws Exception {

@@ -299,6 +299,29 @@ public class ArrayTricks {
         return outArray;
     }
 
+    public int[] insert(int[] array, int element, int position) {
+
+        if (position < 0 || position > array.length) {
+            throw new IllegalArgumentException("invalid position index");
+        }
+        checkNotNull(array);
+        checkNotEmpty(array);
+
+        int[] outArray = new int[array.length + 1];
+
+        for (int i = 0; i < position; i++) {
+            outArray[i] = array[i];
+        }
+
+        outArray[position] = element;
+
+        for (int i = position; i < array.length; i++) {
+            outArray[i + 1] = array[i];
+        }
+
+        return outArray;
+    }
+
     /*
      * Shows all repeated elements
      */
