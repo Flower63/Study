@@ -3,7 +3,9 @@ package com.stud;
 import java.util.Arrays;
 
 /**
- * Created by Dennis on 10/17/2015.
+ * @author Dennis
+ *
+ * on 10/17/2015.
  */
 public class Hello {
     public static void main(String[] args) {
