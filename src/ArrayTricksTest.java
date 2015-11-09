@@ -1,6 +1,7 @@
 import junit.framework.TestCase;
+
+//import static org.junit.Assert.*;
 import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by Flower on 10/21/2015.
