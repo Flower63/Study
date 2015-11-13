@@ -1,6 +1,9 @@
 package ua.epam.my_collections;
 
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
 /**
  * Linked list implementation. Just for study purposes
@@ -9,7 +12,8 @@ import java.util.Iterator;
  *
  * on 11/9/2015.
  */
-public class MyLinkedList<T> implements Iterable<T> {
+//@SuppressWarnings("all")
+public class MyLinkedList<T> implements List<T> {
 
     /**
      * Represents first element
@@ -42,7 +46,7 @@ public class MyLinkedList<T> implements Iterable<T> {
      *
      * @param value - Input value
      */
-    public void add(T value) {
+    public boolean add(T value) {
         if (size == 0) {
             first = new Node(value, null, null);
             last = first;
@@ -53,6 +57,8 @@ public class MyLinkedList<T> implements Iterable<T> {
             last = node;
             size++;
         }
+
+        return true;
     }
 
     /**
@@ -62,28 +68,7 @@ public class MyLinkedList<T> implements Iterable<T> {
      * @return - Relative value
      */
     public T get(int index) {
-
-        if (index < 0 || index > size) {
-            throw new IllegalArgumentException();
-        } else if (index == 0) {
-            return getFirst();
-        } else if (index == size - 1) {
-            return getLast();
-        }
-
-        int count = 0;
-
-        Node result = first;
-
-        while (result.hasNext()) {
-            result = result.getNext();
-            count++;
-            if (count == index) {
-                break;
-            }
-        }
-
-        return result.getValue();
+        return getNodeByIndex(index).getValue();
     }
 
     /**
@@ -126,30 +111,25 @@ public class MyLinkedList<T> implements Iterable<T> {
      *
      * @param index of element to remove
      */
-    public void remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayIndexOutOfBoundsException();
-        } else if (index == 0) {
-            removeFirst();
-            return;
-        } else if (index == (size - 1)) {
-            removeLast();
-            return;
+    public T remove(int index) {
+        Node temp = getNodeByIndex(index);
+
+        removeElement(temp);
+
+        return temp.getValue();
+    }
+
+    private void removeElement(Node element) {
+        Node prev = element.getLast();
+        Node next = element.getNext();
+
+        if (prev != null) {
+            prev.setNext(next);
         }
 
-        int count = 0;
-        Node temp = first;
-
-        while (count != index) {
-            temp = temp.getNext();
-            count++;
+        if (next != null) {
+            next.setLast(prev);
         }
-
-        Node prev = temp.getLast();
-        Node next = temp.getNext();
-
-        prev.setNext(next);
-        next.setLast(prev);
 
         size--;
     }
@@ -157,21 +137,39 @@ public class MyLinkedList<T> implements Iterable<T> {
     /**
      * Removing first element in collection
      */
-    public void removeFirst() {
+    public T removeFirst() {
+        Node temp = first;
+
         if (size > 0) {
             first = first.getNext();
+
+            if (size == 1) {
+                last = null;
+            }
+
             size--;
         }
+
+        return temp.getValue();
     }
 
     /**
      * Removing last element in collection
      */
-    public void removeLast() {
+    public T removeLast() {
+        Node temp = last;
+
         if (size > 0) {
             last = last.getLast();
+
+            if (size == 1) {
+                first = null;
+            }
+
             size--;
         }
+
+        return temp.getValue();
     }
 
     /**
@@ -182,23 +180,239 @@ public class MyLinkedList<T> implements Iterable<T> {
     @Override
     public Iterator<T> iterator() {
         return new Iterator<T>() {
-            private int cursor;
+            private Node element = first;
 
             @Override
             public boolean hasNext() {
-                return cursor < size;
+                return element != null;
             }
 
             @Override
             public T next() {
-                return get(cursor++);
+                T value = null;
+
+                if (element != null) {
+                    value = element.getValue();
+                    element = element.getNext();
+                }
+
+                return value;
             }
 
             @Override
             public void remove() {
-                MyLinkedList.this.remove(cursor);
+                removeElement(element);
             }
         };
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size > 0;
+    }
+
+    @Override
+    public boolean contains(Object o) {
+        return indexOf(o) != -1;
+    }
+
+    @Override
+    public Object[] toArray() {
+
+        Object[] result = new Object[size];
+        Node temp = first;
+        int cursor = 0;
+
+        while (temp != null) {
+            result[cursor++] = temp.getValue();
+            temp = temp.getNext();
+        }
+
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T1> T1[] toArray(T1[] a) {
+
+        if (a.length < size) {
+            a = (T1[]) new Object[size];
+        }
+
+        Object[] result = a;
+
+        int cursor = 0;
+
+        for(Node n = first; n != null; n = n.getNext()) {
+            result[cursor++] = n.getValue();
+        }
+
+        while (a.length > size) {
+            a[cursor++] = null;
+        }
+
+        return a;
+    }
+
+    @Override
+    public boolean remove(Object o) {
+        if (o == null) {
+            for (Node x = first; x != null; x = x.getNext()) {
+                if (x.getValue() == null) {
+                    removeElement(x);
+                    return true;
+                }
+            }
+        } else {
+            for (Node x = first; x != null; x = x.getNext()) {
+                if (o.equals(x.getValue())) {
+                    removeElement(x);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean containsAll(Collection<?> c) {
+
+        Iterator iterator = c.iterator();
+        while (iterator().hasNext()) {
+            if (!contains(iterator.next())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    //TODO
+    @Override
+    public boolean addAll(Collection<? extends T> c) {
+        return false;
+    }
+
+    //TODO
+    @Override
+    public boolean addAll(int index, Collection<? extends T> c) {
+        return false;
+    }
+
+    //TODO
+    @Override
+    public boolean removeAll(Collection<?> c) {
+        return false;
+    }
+
+    //TODO
+    @Override
+    public boolean retainAll(Collection<?> c) {
+        return false;
+    }
+
+    @Override
+    public void clear() {
+        first = null;
+        last = null;
+        size = 0;
+    }
+
+    @Override
+    public T set(int index, T element) {
+        Node node = getNodeByIndex(index);
+        T value = node.getValue();
+        node.setValue(element);
+
+        return value;
+    }
+
+    @Override
+    public void add(int index, T element) {
+        if (size == 0) {
+            add(element);
+            return;
+        }
+
+        Node temp = getNodeByIndex(index);
+        Node newNode = new Node(element, temp, temp.getLast());
+
+        temp.setLast(newNode);
+
+        if (newNode.getLast() != null) {
+            newNode.getLast().setNext(newNode);
+        }
+
+        size++;
+    }
+
+    @Override
+    public int indexOf(Object o) {
+        int index = 0;
+
+        if (o == null) {
+            for (Node x = first; x != null; x = x.getNext()) {
+                if (x.getValue() == null) {
+                    return index;
+                }
+                index++;
+            }
+        } else {
+            for (Node x = first; x != null; x = x.getNext()) {
+                if (o.equals(x.getValue())) {
+                    return index;
+                }
+                index++;
+            }
+        }
+
+        return -1;
+    }
+
+    //TODO
+    @Override
+    public int lastIndexOf(Object o) {
+        return 0;
+    }
+
+    //TODO
+    @Override
+    public ListIterator<T> listIterator() {
+        return null;
+    }
+
+    //TODO
+    @Override
+    public ListIterator<T> listIterator(int index) {
+        return null;
+    }
+
+    //TODO
+    @Override
+    public List<T> subList(int fromIndex, int toIndex) {
+        return null;
+    }
+
+    private Node getNodeByIndex(int index) {
+
+        if (index < 0 || index >= size) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
+
+        if (index == 0) {
+            return first;
+        } else if (index == (size - 1)) {
+            return last;
+        }
+
+        Node res = first;
+        int count = 0;
+
+        while (count != index) {
+            res = res.getNext();
+            count++;
+        }
+
+        return res;
     }
 
     /**
@@ -238,6 +452,10 @@ public class MyLinkedList<T> implements Iterable<T> {
 
         public void setLast(Node last) {
             this.last = last;
+        }
+
+        public void setValue(T value) {
+            this.value = value;
         }
     }
 }
