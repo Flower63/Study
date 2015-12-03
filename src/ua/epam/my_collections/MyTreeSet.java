@@ -1,18 +1,35 @@
 package ua.epam.my_collections;
 
 import java.util.Iterator;
-import java.util.Stack;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.ResourceBundle;
 
 /**
- * Created by Flower
+ * My implementation of TreeSet
+ *
+ * @author Dennis
  *
  * on 11/27/2015.
  */
 public class MyTreeSet<T extends Comparable<T>> {
 
+    /**
+     * Size of set
+     */
     private int size;
+
+    /**
+     * Root node
+     */
     private Node<T> root;
 
+    /**
+     * Adding element
+     *
+     * @param t element to hold
+     * @return result of operation
+     */
     public boolean add(T t) {
 
         if (root == null) {
@@ -25,6 +42,12 @@ public class MyTreeSet<T extends Comparable<T>> {
         return true;
     }
 
+    /**
+     * Adding value to specified node
+     *
+     * @param node node to find proper place
+     * @param t element to hold
+     */
     private void addNode(Node node, T t) {
         if (node.item.equals(t)) {
             return;
@@ -43,6 +66,14 @@ public class MyTreeSet<T extends Comparable<T>> {
         }
     }
 
+    /**
+     * Getting node, that contains specified value
+     *
+     * @param node Node to searching from
+     * @param t element to find
+     * @return Corresponding node
+     * @return Null if node not found
+     */
     private Node getNode(Node node, T t) {
 
         if (node.item.equals(t)) {
@@ -62,53 +93,202 @@ public class MyTreeSet<T extends Comparable<T>> {
         }
     }
 
-    public T remove(T t) {
+    /**
+     * Removing node by specified element
+     *
+     * @param t element to find
+     */
+    public void remove(T t) {
 
         Node node = getNode(root, t);
+
         if (node == null) {
-            return null;
+            return;
         }
 
-        T result = (T) node.item;
+        if (node == root && size == 1) {
+            root = null;
+            size--;
+            return;
+        }
 
-        return result;
+        if (node.leftNode == null && node.rightNode == null) {
+            removeNode(node, null);
+        } else if (node.rightNode != null && node.leftNode == null) {
+            removeNode(node, node.rightNode);
+        } else if (node.rightNode == null) {
+            removeNode(node, node.leftNode);
+        } else {
+            Node successor = node.rightNode;
+
+            while (successor.leftNode != null) {
+                successor = successor.leftNode;
+            }
+
+            node.item = successor.item;
+            removeNode(successor, successor.rightNode);
+        }
     }
 
+    /**
+     * Removing node, depending of its position in parent node
+     *
+     * @param node Node to process
+     * @param childNode Replacement
+     */
+    private void removeNode(Node node, Node childNode) {
+        Node parent = node.parent;
+
+        if (parent.leftNode == node) {
+            parent.leftNode = childNode;
+        } else {
+            parent.rightNode = childNode;
+        }
+
+        size--;
+    }
+
+    /**
+     * Checking of element existence in set
+     *
+     * @param t Element to find
+     * @return Result of check. True if found, false otherwise
+     */
     public boolean contains(T t) {
         return getNode(root, t) != null;
     }
 
+    /**
+     * Size of set
+     *
+     * @return Size
+     */
     public int size() {
         return size;
     }
 
-    public Iterator iterator() {
-        return new Iterator() {
-            Stack<Node> stack = new Stack<>();
-            Node top = root;
+    /**
+     * Set iterator
+     *
+     * @return iterator
+     */
+    public Iterator<T> iterator() {
+        if (size > 5000) {
+            return getNonRecursiveIterator();
+        }
 
-            {
-                while (top.leftNode != null) {
-                    top = top.leftNode;
-                }
-
-                while (top != null || !stack.empty()) {
-
-                }
-            }
-
-            @Override
-            public boolean hasNext() {
-                return !stack.empty();
-            }
-
-            @Override
-            public Object next() {
-                return null;
-            }
-        };
+        return getRecursiveIterator();
     }
 
+    /**
+     * Getting iterator of non-recursive type
+     *
+     * @return iterator
+     */
+    public Iterator<T> getNonRecursiveIterator() {
+        return new NonRecursiveIterator();
+    }
+
+    /**
+     * Getting iterator of recursive type
+     *
+     * @return iterator
+     */
+    public Iterator<T> getRecursiveIterator() {
+        return new RecursiveIterator();
+    }
+
+    /**
+     * Recursive implementation of Iterator
+     */
+    private class RecursiveIterator implements Iterator<T> {
+        Queue<T> queue = new LinkedList<>();
+
+        RecursiveIterator() {
+            fillQueue(root);
+        }
+
+        private void fillQueue(Node node) {
+
+            if (node == null) {
+                return;
+            }
+
+            fillQueue(node.leftNode);
+            queue.offer((T) node.item);
+            fillQueue(node.rightNode);
+        }
+
+        @Override
+        public boolean hasNext() {
+            return !queue.isEmpty();
+        }
+
+        @Override
+        public T next() {
+            return queue.poll();
+        }
+    }
+
+    /**
+     * Non-recursive implementation of Iterator
+     */
+    private class NonRecursiveIterator implements Iterator<T> {
+        Node next;
+
+        NonRecursiveIterator() {
+            if (root != null) {
+                next = firstNode(root);
+            }
+        }
+
+        private Node firstNode(Node root) {
+            if (root.leftNode == null) {
+                return root;
+            } else {
+                return firstNode(root.leftNode);
+            }
+        }
+
+        @Override
+        public boolean hasNext() {
+            return next != null;
+        }
+
+        @Override
+        public T next() {
+            Node current = next;
+            if (next.rightNode != null) {
+                next = next.rightNode;
+
+                while (next.leftNode != null) {
+                    next = next.leftNode;
+                }
+
+                return (T) current.item;
+            } else {
+                while (true) {
+                    if (next.parent == null) {
+                        next = null;
+                        return (T) current.item;
+                    }
+
+                    if (next.parent.leftNode == next) {
+                        next = next.parent;
+                        return (T) current.item;
+                    }
+
+                    next = next.parent;
+                }
+            }
+        }
+    }
+
+    /**
+     * Node class
+     *
+     * @param <T> - type of element to hold
+     */
     private static class Node<T extends Comparable<T>> {
         private T item;
         private Node<T> leftNode;
