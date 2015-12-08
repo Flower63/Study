@@ -1,5 +1,7 @@
 package com.stud;
 
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -9,9 +11,15 @@ import java.util.*;
  */
 public class Hello {
     public static void main(String[] args) {
-        List<String> list = new LinkedList<>();
-        Set<String> set = new TreeSet<>();
-        Map map = new TreeMap<>();
+        Properties config = new Properties();
+
+        try {
+            config.load(new FileReader("config/type.properties"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(config.getProperty("type"));
     }
 
     /*
