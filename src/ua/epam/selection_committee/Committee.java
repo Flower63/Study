@@ -27,19 +27,22 @@ public class Committee implements Runnable {
 
     @Override
     public void run() {
+
+        Student student = room.getStudent();
+
         while (!isDone) {
             /*
              * Getting biologists students
              */
-            while (room.peek() instanceof Biologist) {
-                biologists.add(room.getStudent());
+            while (student instanceof Biologist) {
+                biologists.add(student);
+                student = room.getStudent();
             }
 
             /*
              * Getting all students
              */
             for (int i = 0; i < getStudentsNumber(); i++) {
-                Student student = room.getStudent();
 
                 if (student != null) {
                     all.add(student);
@@ -47,13 +50,16 @@ public class Committee implements Runnable {
                     isDone = true;
                     break;
                 }
+
+                student = room.getStudent();
             }
 
             /*
              * Getting mathematicians students
              */
-            while (room.peek() instanceof Mathematician) {
-                mathematicians.add(room.getStudent());
+            while (student instanceof Mathematician) {
+                mathematicians.add(student);
+                student = room.getStudent();
             }
         }
 

@@ -10,9 +10,21 @@ import java.util.Queue;
  */
 public class WaitingRoom {
 
+    /**
+     * Queue of students
+     */
     private Queue<Student> queue = new LinkedList<>();
 
+    /**
+     * Variable to exit process
+     */
     private boolean isDone = false;
+
+    /**
+     * Limits
+     */
+    private final int upperLimit = 50;
+    private final int lowerLimit = 25;
 
     /**
      * Getting student from queue head
@@ -21,10 +33,10 @@ public class WaitingRoom {
      */
     public synchronized Student getStudent() {
 
-        if (queue.size() <= 25 && !isDone) {
-            notify();
+        if (queue.size() <= lowerLimit && !isDone) {
+            notifyAll();
 
-            while (queue.size() < 50 && !isDone) {
+            while (queue.size() < upperLimit && !isDone) {
                 try {
                     wait();
                 } catch (InterruptedException e) {
@@ -43,10 +55,10 @@ public class WaitingRoom {
      */
     public synchronized void addStudent(Student student) {
 
-        if (queue.size() >= 50) {
-            notify();
+        if (queue.size() >= upperLimit) {
+            notifyAll();
 
-            while (queue.size() > 25) {
+            while (queue.size() > lowerLimit) {
                 try {
                     wait();
                 } catch (InterruptedException e) {
@@ -59,28 +71,10 @@ public class WaitingRoom {
     }
 
     /**
-     * Look at next student
-     *
-     * @return Student
-     */
-    public synchronized Student peek() {
-
-        while (queue.isEmpty() && !isDone) {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return queue.peek();
-    }
-
-    /**
      * Generator exhausted notification
      */
     public synchronized void setDone() {
         isDone = true;
-        notify();
+        notifyAll();
     }
 }
