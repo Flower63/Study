@@ -16,7 +16,7 @@ public class StudentQueue {
 
     public synchronized void put(Student student) {
 
-        if (queue.size() >= upLimit) {
+        if (queue.size() > upLimit) {
             notifyAll();
 
             while (queue.size() > lowLimit) {
@@ -33,7 +33,7 @@ public class StudentQueue {
 
     public synchronized void enrollStudents(Visitor visitor) {
 
-        if (queue.size() <= lowLimit && !done) {
+        if (queue.size() < lowLimit && !done) {
             notifyAll();
 
             while (queue.size() < upLimit && !done) {

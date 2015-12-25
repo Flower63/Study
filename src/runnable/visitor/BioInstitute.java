@@ -37,7 +37,7 @@ public class BioInstitute implements Runnable {
         while (!isOver) {
             queue.enrollStudents(visitor);
             try {
-                Thread.sleep(30);
+                Thread.sleep(50);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
